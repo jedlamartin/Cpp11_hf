@@ -9,9 +9,11 @@ public:
     MyString();
     MyString(const char* array);
     MyString(const MyString& array);
+    MyString(MyString&& other) noexcept;
     ~MyString();
     MyString& operator=(const MyString& other);
     MyString& operator=(const char* other);
+    MyString& operator=(MyString&& other);
     const char& operator[](uint32_t i) const;
     char& operator[](uint32_t i);
     const char* c_str() const;

@@ -9,6 +9,11 @@ MyString::MyString(const MyString& myString) {
     ++string->count_;
 }
 
+MyString::MyString(MyString&& other) noexcept {
+    string = other.string;
+    other.string = nullptr;
+}
+
 MyString::~MyString() { release(); }
 
 MyString& MyString::operator=(const MyString& other) {
@@ -24,6 +29,14 @@ MyString& MyString::operator=(const char* other) {
     release();
 
     string = new MyString::StringData(other);
+    return *this;
+}
+MyString& MyString::operator=(MyString&& other) {
+    if(this != other) {
+        release();
+        string = other.string;
+        other.string = nullptr;
+    }
     return *this;
 }
 
