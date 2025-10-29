@@ -25,18 +25,20 @@ MyString& MyString::operator=(const MyString& other) {
     return *this;
 }
 
+MyString& MyString::operator=(MyString&& other) noexcept {
+    if(this != &other) {
+        release();
+
+        string = other.string;
+        other.string = nullptr;
+    }
+    return *this;
+}
+
 MyString& MyString::operator=(const char* other) {
     release();
 
     string = new MyString::StringData(other);
-    return *this;
-}
-MyString& MyString::operator=(MyString&& other) {
-    if(this != other) {
-        release();
-        string = other.string;
-        other.string = nullptr;
-    }
     return *this;
 }
 
@@ -122,6 +124,26 @@ std::ostream& operator<<(std::ostream& os, const MyString& myString) {
     return os;
 }
 
+std::istream& operator>>(std::istream& is, MyString& myString) {
+    size_t size = 1024;
+    char* input = new char[size];
+    size_t index = 0;
+    int c;
+    while((c = is.get()) && !isspace(c)) {
+        if(index == size - 1) {
+            size *= 2;
+            char* tmp = new char[size];
+            strncpy(tmp, input, index);
+            delete[] input;
+            input = tmp;
+        }
+        input[index++] = c;
+    }
+    input[index] = '\0';
+    myString = input;
+    return is;
+}
+
 MyString operator+(const MyString& lhs, const MyString& rhs) {
     MyString result = lhs;
     result += rhs;
@@ -130,6 +152,15 @@ MyString operator+(const MyString& lhs, const MyString& rhs) {
 
 MyString operator+(const MyString& lhs, char rhs) {
     MyString result = lhs;
+    result += rhs;
+    return result;
+}
+
+MyString operator+(char lhs, const MyString& rhs) {
+    char lhs_s[2];
+    lhs_s[0] = lhs;
+    lhs_s[1] = '\0';
+    MyString result = lhs_s;
     result += rhs;
     return result;
 }

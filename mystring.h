@@ -13,14 +13,12 @@ public:
     ~MyString();
     MyString& operator=(const MyString& other);
     MyString& operator=(const char* other);
-    MyString& operator=(MyString&& other);
+    MyString& operator=(MyString&& other) noexcept;
     const char& operator[](uint32_t i) const;
     char& operator[](uint32_t i);
     const char* c_str() const;
     MyString& operator+=(const MyString& other);
     MyString& operator+=(const char other);
-
-    // TODO: move constructor and move assignment operator
 
     uint32_t length() const;
 
